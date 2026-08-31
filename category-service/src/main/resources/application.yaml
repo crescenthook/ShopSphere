@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: category-service
+
+  datasource:
+    url: jdbc:postgresql://postgres:5432/product_db
+    username: postgres
+    password: postgres
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+server:
+  port: 8084
+
+eureka:
+  instance:
+    hostname: category-service
+
+  client:
+    service-url:
+      defaultZone: http://eureka-server:8761/eureka/

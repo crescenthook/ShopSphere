@@ -1,0 +1,64 @@
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      server:
+        webmvc:
+          routes:
+            - id: product-service
+              uri: lb://PRODUCT-SERVICE
+              predicates:
+                - Path=/products/**
+            - id: product-service-api-docs
+              uri: lb://PRODUCT-SERVICE
+              predicates:
+                - Path=/product-service/v3/api-docs
+              filters:
+                - RewritePath=/product-service/v3/api-docs, /v3/api-docs
+
+            - id: category-service
+              uri: lb://CATEGORY-SERVICE
+              predicates:
+                - Path=/categories/**
+            - id: category-service-api-docs
+              uri: lb://CATEGORY-SERVICE
+              predicates:
+                - Path=/category-service/v3/api-docs
+              filters:
+                - RewritePath=/category-service/v3/api-docs, /v3/api-docs
+
+            - id: auth-service
+              uri: lb://AUTH-SERVICE
+              predicates:
+                - Path=/auth/**
+            - id: auth-service-api-docs
+              uri: lb://AUTH-SERVICE
+              predicates:
+                - Path=/auth-service/v3/api-docs
+              filters:
+                - RewritePath=/auth-service/v3/api-docs, /v3/api-docs
+
+server:
+  port: 8080
+
+eureka:
+  instance:
+    hostname: api-gateway
+
+  client:
+    service-url:
+      defaultZone: http://eureka-server:8761/eureka/
+jwt:
+  secret: my-super-secret-key-for-shopshere-jwt-token-generation
+
+springdoc:
+  swagger-ui:
+    urls:
+      - name: Product Service
+        url: /product-service/v3/api-docs
+      - name: Category Service
+        url: /category-service/v3/api-docs
+      - name: Auth Service
+        url: /auth-service/v3/api-docs

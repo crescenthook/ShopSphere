@@ -1,0 +1,57 @@
+services:
+
+  postgres:
+    image: postgres:latest
+    container_name: shopsphere-postgres
+    environment:
+      POSTGRES_DB: product_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+
+  product-service:
+    image: shopsphere-product-service:latest
+    container_name: shopsphere-product-service
+    ports:
+      - "8082:8082"
+    depends_on:
+      - postgres
+      - eureka-server
+
+  category-service:
+    image: shopsphere-category-service:latest
+    container_name: shopsphere-category-service
+    ports:
+      - "8084:8084"
+    depends_on:
+      - postgres
+      - eureka-server
+
+  auth-service:
+    image: shopsphere-auth-service:latest
+    container_name: shopsphere-auth-service
+    ports:
+      - "8083:8083"
+    depends_on:
+      - postgres
+      - eureka-server
+
+  api-gateway:
+    image: shopsphere-api-gateway:latest
+    container_name: shopsphere-api-gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - eureka-server
+
+  eureka-server:
+    image: shopsphere-eureka-server:latest
+    container_name: shopsphere-eureka-server
+    ports:
+      - "8761:8761"
+
+volumes:
+  postgres_data:

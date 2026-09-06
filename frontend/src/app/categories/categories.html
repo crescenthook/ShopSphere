@@ -1,0 +1,37 @@
+<div class="container mt-5">
+
+    <h2 class="mb-4 text-dark">
+        Categories
+    </h2>
+
+    <div class="row">
+
+        @for(category of categories(); track category.id) {
+
+            <div class="col-md-4 mb-4">
+
+                <div class="card shadow-sm h-100">
+
+                    <div class="card-body">
+
+                        <h5 class="card-title">
+                            {{ category.name }}
+                        </h5>
+
+                        <p class="card-text text-muted">
+                            {{ category.description }}
+                        </p>
+
+                        <button class="btn btn-primary" [routerLink] = "['/categories', category.id]">
+                            View Products
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+        }
+
+    </div>
+</div>

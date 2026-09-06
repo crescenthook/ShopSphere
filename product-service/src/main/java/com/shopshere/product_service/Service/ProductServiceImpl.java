@@ -11,6 +11,7 @@ import com.shopshere.product_service.Repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements ProductService{
@@ -77,6 +78,13 @@ public class ProductServiceImpl implements ProductService{
         Product product = productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException("Product with id " + id + " not found."));
 
         productRepository.deleteById(id);
+    }
+
+    @Override
+    public List<ProductResponseListDto> findProductsByCategoryId(Long categoryId) {
+        List<Product> productList = productRepository.findProductsByCategoryId(categoryId);
+
+        return productList.stream().map(this::mapToResponseList).collect(Collectors.toList());
     }
 
     private ProductResponseDto mapToResponse(Product product, CategoryResponseDto category) {

@@ -54,4 +54,11 @@ public class ProductController {
         String message = "Product with id " + id + " successfully deleted";
         return ResponseEntity.status(HttpStatus.OK).body(message);
     }
+
+    @GetMapping("/category/{categoryId}")
+    public ResponseEntity<List<ProductResponseListDto>> getProductsByCategoryId(@PathVariable Long categoryId){
+
+        List<ProductResponseListDto> productsList = productService.findProductsByCategoryId(categoryId);
+        return ResponseEntity.status(HttpStatus.OK).body(productsList);
+    }
 }

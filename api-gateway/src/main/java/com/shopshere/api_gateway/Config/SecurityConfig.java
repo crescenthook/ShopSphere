@@ -40,13 +40,20 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> {})
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**",
+                        .requestMatchers(
+                                "/auth/**",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
                                 "/v3/api-docs/**",
+
                                 "/product-service/v3/api-docs",
                                 "/category-service/v3/api-docs",
-                                "/auth-service/v3/api-docs").permitAll()
+                                "/auth-service/v3/api-docs",
+
+                                "/cart-service/v3/api-docs",
+                                "/inventory-service/v3/api-docs",
+                                "/order-service/v3/api-docs"
+                        ).permitAll()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exception ->

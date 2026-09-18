@@ -3,12 +3,14 @@ package com.shopshere.cart_service.Controller;
 import com.shopshere.cart_service.DTO.WishlistItemRequestDto;
 import com.shopshere.cart_service.DTO.WishlistResponseDto;
 import com.shopshere.cart_service.Service.WishlistService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@SecurityRequirement(name = "Bearer Authentication")
 @RestController
 @RequestMapping("/wishlist")
 @RequiredArgsConstructor

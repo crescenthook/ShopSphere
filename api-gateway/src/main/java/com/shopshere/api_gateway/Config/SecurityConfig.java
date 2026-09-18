@@ -52,7 +52,8 @@ public class SecurityConfig {
 
                                 "/cart-service/v3/api-docs",
                                 "/inventory-service/v3/api-docs",
-                                "/order-service/v3/api-docs"
+                                "/order-service/v3/api-docs",
+                                "/payment-service/v3/api-docs"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )

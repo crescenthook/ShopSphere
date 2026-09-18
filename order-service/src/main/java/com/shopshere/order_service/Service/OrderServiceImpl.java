@@ -2,12 +2,16 @@ package com.shopshere.order_service.Service;
 
 import com.shopshere.order_service.Client.CartClient;
 import com.shopshere.order_service.Client.InventoryClient;
+import com.shopshere.order_service.Client.PaymentClient;
 import com.shopshere.order_service.Client.ProductClient;
 import com.shopshere.order_service.DTO.*;
 import com.shopshere.order_service.Entity.Order;
 import com.shopshere.order_service.Entity.OrderItem;
 import com.shopshere.order_service.Entity.OrderStatus;
+import com.shopshere.order_service.Event.OrderCreatedEvent;
+import com.shopshere.order_service.Event.OrderItemEvent;
 import com.shopshere.order_service.Exception.OrderNotFoundException;
+import com.shopshere.order_service.Producer.OrderEventProducer;
 import com.shopshere.order_service.Repository.OrderRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +29,8 @@ public class OrderServiceImpl implements OrderService {
     private final CartClient cartClient;
     private final ProductClient productClient;
     private final InventoryClient inventoryClient;
+    private final PaymentClient paymentClient;
+    private final OrderEventProducer orderEventProducer;
 
     @Transactional
     public OrderResponse createOrder(Long userId) {
@@ -50,7 +56,7 @@ public class OrderServiceImpl implements OrderService {
 
             ProductResponse product = productClient.getProductById(cartItem.getProductId());
 
-            inventoryClient.reserveStock(product.getId(), cartItem.getQuantity());
+            //inventoryClient.reserveStock(product.getId(), cartItem.getQuantity());
 
             BigDecimal subtotal = product.getPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity()));
 
@@ -67,8 +73,36 @@ public class OrderServiceImpl implements OrderService {
             totalAmount = totalAmount.add(subtotal);
         }
 
+        //Set Amount
         order.setTotalAmount(totalAmount);
+
+        //Save Order to OrderRepository
         Order savedOrder = orderRepository.save(order);
+
+        //Publish OrderCreatedEvent
+        List<OrderItemEvent> items = savedOrder.getItems().stream().map(x -> new OrderItemEvent(x.getProductId(), x.getQuantity())).toList();
+        OrderCreatedEvent event = new OrderCreatedEvent(savedOrder.getId(), items);
+        orderEventProducer.publishOrderCreated(event);
+
+        //Create PaymentRequest
+        PaymentRequest paymentRequest = new PaymentRequest();
+        paymentRequest.setUserId(userId);
+        paymentRequest.setAmount(savedOrder.getTotalAmount());
+        paymentRequest.setOrderId(savedOrder.getId());
+
+        PaymentResponse paymentResponse = paymentClient.createPayment(paymentRequest);
+
+        if (paymentResponse.getStatus() == PaymentStatus.SUCCESS) {
+
+            savedOrder.setStatus(OrderStatus.CONFIRMED);
+            savedOrder = orderRepository.save(savedOrder);
+
+            cartClient.clearCart(userId);
+        } else {
+
+            savedOrder.setStatus(OrderStatus.CANCELLED);
+            savedOrder = orderRepository.save(savedOrder);
+        }
 
         return mapToResponse(savedOrder);
     }

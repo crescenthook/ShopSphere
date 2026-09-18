@@ -4,11 +4,13 @@ import com.shopshere.cart_service.DTO.CartItemRequestDto;
 import com.shopshere.cart_service.DTO.CartResponseDto;
 import com.shopshere.cart_service.DTO.UpdateCartItemRequestDto;
 import com.shopshere.cart_service.Service.CartService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@SecurityRequirement(name = "Bearer Authentication")
 @RestController
 @RequestMapping("/cart")
 public class CartController {

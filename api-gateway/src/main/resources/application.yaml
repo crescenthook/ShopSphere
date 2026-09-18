@@ -44,6 +44,10 @@ spring:
               uri: lb://CART-SERVICE
               predicates:
                 - Path=/cart/**
+            - id: wishlist-service
+              uri: lb://CART-SERVICE
+              predicates:
+                - Path=/wishlist/**
             - id: cart-service-api-docs
               uri: lb://CART-SERVICE
               predicates:
@@ -73,6 +77,18 @@ spring:
               filters:
                 - RewritePath=/order-service/v3/api-docs, /v3/api-docs
 
+            - id: payment-service
+              uri: lb://PAYMENT-SERVICE
+              predicates:
+                - Path=/payments/**
+            - id: payment-service-api-docs
+              uri: lb://PAYMENT-SERVICE
+              predicates:
+                - Path=/payment-service/v3/api-docs
+              filters:
+                - RewritePath=/payment-service/v3/api-docs, /v3/api-docs
+
+
 server:
   port: 8080
 
@@ -101,3 +117,5 @@ springdoc:
         url: /inventory-service/v3/api-docs
       - name: Order Service
         url: /order-service/v3/api-docs
+      - name: Payment Service
+        url: /payment-service/v3/api-docs

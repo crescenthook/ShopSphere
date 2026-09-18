@@ -3,10 +3,12 @@ package com.shopshere.inventory_service.Controller;
 import com.shopshere.inventory_service.DTO.InventoryRequest;
 import com.shopshere.inventory_service.DTO.InventoryResponse;
 import com.shopshere.inventory_service.Service.InventoryService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@SecurityRequirement(name = "Bearer Authentication")
 @RestController
 @RequestMapping("/inventory")
 public class InventoryController {

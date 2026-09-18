@@ -31,4 +31,6 @@ public class Product {
 
     @Column(nullable = false)
     private BigDecimal price;
+
+    private String imageUrl;
 }

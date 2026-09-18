@@ -2,6 +2,11 @@
   <div class="row justify-content-center">
     <div class="col-md-5">
 
+      @if(message()){
+        <div class="alert" [class.alert-success] ="messageType() == 'success'" [class.alert-danger] = "messageType() == 'error'" >
+          {{message()}}
+        </div>
+      }
       <h2 class="text-center mb-4">Login</h2>
 
       <form [formGroup]="loginForm" (ngSubmit)="login()">
@@ -40,6 +45,13 @@
         <button type="submit" class="btn btn-primary w-100" [disabled]="loginForm.invalid">
           Login
         </button>
+
+        <div class="text-center mt-3">
+          <span class="text-muted">Don't have an account?</span>
+          <a routerLink="/register" class="ms-1">
+          Register
+          </a>
+        </div>
 
       </form>
 

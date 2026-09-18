@@ -1,0 +1,210 @@
+<div class="container mt-5">
+
+  @if (order(); as currentOrder) {
+
+    <!-- Order Confirmation -->
+
+    <div class="row justify-content-center">
+      <div class="col-md-7">
+
+        <div class="card text-center">
+
+          <div class="card-body p-5">
+
+            <h2 class="text-success mb-3">
+              ✓ Order Placed Successfully!
+            </h2>
+
+            <p class="text-muted">
+              Thank you for your purchase.
+            </p>
+
+            <hr>
+
+            <div class="text-start">
+
+              <p>
+                <strong>Order ID:</strong>
+                #{{ currentOrder.orderId }}
+              </p>
+
+              <p>
+                <strong>Status:</strong>
+                {{ currentOrder.status }}
+              </p>
+
+              <p>
+                <strong>Total Amount:</strong>
+                ₹{{ currentOrder.totalAmount }}
+              </p>
+
+              <p>
+                <strong>Order Date:</strong>
+                {{ currentOrder.createdAt | date:'medium' }}
+              </p>
+
+            </div>
+
+            <hr>
+
+            <button class="btn btn-primary">
+              Proceed to Payment
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+  } @else {
+
+    <!-- Checkout -->
+
+    <h2 class="mb-4">Checkout</h2>
+
+    @if (message()) {
+      <div
+        class="alert"
+        [class.alert-success]="messageType() === 'success'"
+        [class.alert-danger]="messageType() === 'error'">
+
+        {{ message() }}
+
+      </div>
+    }
+
+    @if (cart(); as currentCart) {
+
+      @if (currentCart.items.length > 0) {
+
+        <div class="row">
+
+          <!-- Order Items -->
+
+          <div class="col-md-8">
+
+            <h4 class="mb-3">Order Items</h4>
+
+            @for (item of currentCart.items; track item.productId) {
+
+              @if (products().get(item.productId); as product) {
+
+                <div class="card mb-3">
+
+                  <div class="card-body">
+
+                    <div class="row align-items-center">
+
+                      <div class="col-md-3">
+                        <img
+                          [src]="product.imageUrl"
+                          [alt]="product.name"
+                          class="img-fluid">
+                      </div>
+
+                      <div class="col-md-6">
+
+                        <h5>{{ product.name }}</h5>
+
+                        <p class="text-muted">
+                          {{ product.description }}
+                        </p>
+
+                        <p class="mb-1">
+                          Price:
+                          <strong>₹{{ product.price }}</strong>
+                        </p>
+
+                        <p class="mb-0">
+                          Quantity:
+                          <strong>{{ item.quantity }}</strong>
+                        </p>
+
+                      </div>
+
+                      <div class="col-md-3 text-end">
+
+                        <h5>
+                          ₹{{ product.price * item.quantity }}
+                        </h5>
+
+                      </div>
+
+                    </div>
+
+                  </div>
+
+                </div>
+
+              }
+
+            }
+
+          </div>
+
+          <!-- Order Summary -->
+
+          <div class="col-md-4">
+
+            <div class="card">
+
+              <div class="card-body">
+
+                <h4>Order Summary</h4>
+
+                <hr>
+
+                <p>
+                  Total Items:
+                  <strong>{{ currentCart.items.length }}</strong>
+                </p>
+
+                <button
+                  class="btn btn-primary w-100"
+                  (click)="placeOrder()">
+                  Place Order
+                </button>
+
+                <a
+                  routerLink="/cart"
+                  class="btn btn-outline-secondary w-100 mt-2">
+                  Back to Cart
+                </a>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      } @else {
+
+        <div class="text-center mt-5">
+
+          <h4>Your cart is empty</h4>
+
+          <a
+            routerLink="/products"
+            class="btn btn-primary mt-3">
+            Continue Shopping
+          </a>
+
+        </div>
+
+      }
+
+    } @else {
+
+      <div class="text-center mt-5">
+        <p>Loading checkout...</p>
+      </div>
+
+    }
+
+  }
+
+</div>

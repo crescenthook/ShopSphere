@@ -17,4 +17,15 @@ export class Auth {
       }
     );
   }
+  register(username: string, password: string) {
+    return this.http.post(`${this.apiUrl}/register`,
+      {
+        username,
+        password
+      },
+      {
+        responseType: 'text'
+      }
+    );
+  }
 }

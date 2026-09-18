@@ -8,6 +8,7 @@ public record ProductResponseListDto(
         String description,
         BigDecimal price,
         Integer quantity,
-        Long categoryId
+        Long categoryId,
+        String imageUrl
 ) {
 }

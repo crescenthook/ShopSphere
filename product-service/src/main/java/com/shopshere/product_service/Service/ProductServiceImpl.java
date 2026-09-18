@@ -95,6 +95,7 @@ public class ProductServiceImpl implements ProductService{
                 product.getDescription(),
                 product.getPrice(),
                 product.getQuantity(),
+                product.getImageUrl(),
                 category
         );
     }
@@ -105,7 +106,8 @@ public class ProductServiceImpl implements ProductService{
                 product.getDescription(),
                 product.getPrice(),
                 product.getQuantity(),
-                product.getCategoryId()
+                product.getCategoryId(),
+                product.getImageUrl()
         );
     }
 }

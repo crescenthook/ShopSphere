@@ -1,37 +1,68 @@
 <div class="container mt-5">
 
-  <h2 class="mb-4">{{ categoryName()? categoryName() +  ' Products' : 'Products'}}</h2>
+  <h2 class="mb-4">
+    {{ categoryName() ? categoryName() + ' Products' : 'Products' }}
+  </h2>
 
-  <div class="row">
+  @if (message()) {
+    <div
+      class="alert"
+      [class.alert-success]="messageType() === 'success'"
+      [class.alert-danger]="messageType() === 'error'">
+
+      {{ message() }}
+
+    </div>
+  }
+  <div class="row g-4">
 
     @for (product of products(); track product.id) {
 
-      <div class="col-md-4 mb-4">
-        <div class="card card h-100 shadow-sm">
-          <div class="card-body">
+      <div class="col-sm-6 col-lg-4">
 
-            <h5 class="card-title">
-              {{ product.name }}
+        <div class="product-card h-100" [routerLink] = "['/products', product.id]">
+
+          <div class="product-image">
+            <img [src]="product.imageUrl" [alt]="product.name">
+          </div>
+
+          <div class="product-content">
+
+            <h5 class="product-title">
+                {{ product.name }}
             </h5>
 
-            <p class="card-text">
+            <p class="product-description">
               {{ product.description }}
             </p>
 
-            <h6 class="text-primary">
-                ₹{{ product.price }}
-            </h6>
+            <div class="product-info">
 
-            <p class="text-muted">
-              Available: {{ product.quantity }}
-            </p>
+              <div>
+                <div class="product-price">
+                  ₹{{ product.price }}
+                </div>
 
-            <button class="btn btn-primary">
-              Add to Cart
-            </button>
+                <div class="product-stock">
+                  Available: {{ product.quantity }}
+                </div>
+              </div>
+
+              <button class="btn btn-primary" (click)="$event.stopPropagation(); addToCart(product.id)">
+
+                @if (addedProductId() === product.id) {
+                  ✓ Added
+                } @else {
+                  Add to Cart
+                }
+              </button>
+
+            </div>
 
           </div>
+
         </div>
+
       </div>
 
     }
